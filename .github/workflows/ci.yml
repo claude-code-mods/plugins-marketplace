@@ -1,6 +1,7 @@
 name: CI
 
-# Every push and pull request: the check, the stager's test, a dry stage.
+# Every push and pull request: the fetch of sources.json, the check, the
+# tests, a dry stage.
 # Deploys nothing.
 
 on:
@@ -18,7 +19,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
+      - run: node scripts/fetch_sources.mjs
       - run: node scripts/check_marketplace.mjs
-      - run: node --test scripts/stage_site.test.mjs
+      - run: node --test scripts/stage_site.test.mjs scripts/sources.test.mjs
       - run: node scripts/stage_site.mjs . site
       - run: cat site/index.json

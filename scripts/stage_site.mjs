@@ -1,37 +1,43 @@
 #!/usr/bin/env node
 /**
- * Builds `site/`, what the origin serves:
- *   marketplace.tar.gz   `.claude-plugin/` and `plugins/` as a gzip POSIX tar
- *                        with one wrapper directory (the layout a client's
- *                        extractor strips), entries sorted, mtime 0, so the
- *                        same tree gives the same bytes
- *   index.json           { name, buildId, generatedAt, sourceCommit, tarball, sha256, size }
+ * Builds `site/` (refuses a tree the check does not pass):
+ *   marketplace.tar.gz   `.claude-plugin/`, `plugins/` and each fetched plugin as `plugins/<name>/`,
+ *                        a gzip POSIX tar under one wrapper directory; sorted, mtime 0, reproducible
+ *   index.json           { name, buildId, generatedAt, sourceCommit, tarball, sha256, size, plugins, sources }
  *   _headers             both files `no-cache`; everything else `no-store`
- * Refuses a tree the check does not pass.
  */
 import { createHash } from 'node:crypto'
-import { mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { join, posix, relative, resolve, sep } from 'node:path'
 import { execSync } from 'node:child_process'
 import { gzipSync } from 'node:zlib'
 import { CATALOG_PATH, checkMarketplace } from './check_marketplace.mjs'
+import { FETCHED_DIR, readSources } from './sources.mjs'
 
 export const TARBALL_NAME = 'marketplace.tar.gz'
 export const INDEX_NAME = 'index.json'
 const SHIPPED_DIRS = ['.claude-plugin', 'plugins']
 
-/** Every regular file under the shipped directories, as sorted posix paths relative to `root`. */
+/**
+ * Every regular file the tarball holds, sorted by `path` (posix, as shipped);
+ * `file` is where it is read from. A fetched plugin's `.sources/<name>/x` ships
+ * as `plugins/<name>/x`.
+ */
 export function shippedFiles(root) {
   const out = []
-  const walk = dir => {
-    for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+  const walk = (dir, shipAs) => {
+    if (!existsSync(dir)) return
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, entry.name)
-      if (entry.isDirectory()) walk(full)
-      else if (entry.isFile()) out.push(relative(root, full).split(sep).join(posix.sep))
+      if (entry.isDirectory()) walk(full, shipAs)
+      else if (entry.isFile()) out.push({ path: shipAs(relative(root, full).split(sep).join(posix.sep)), file: full })
     }
   }
-  for (const dir of SHIPPED_DIRS) walk(join(root, dir))
-  return out.sort()
+  for (const dir of SHIPPED_DIRS) walk(join(root, dir), path => path)
+  for (const name of readSources(root).plugins.keys()) {
+    walk(join(root, FETCHED_DIR, name), path => `plugins/${path.slice(FETCHED_DIR.length + 1)}`)
+  }
+  return out.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
 }
 
 function ustarHeader(name, size) {
@@ -63,12 +69,12 @@ function ustarHeader(name, size) {
   return header
 }
 
-/** The tarball bytes: `files` (relative posix paths) under `wrapper/`, read from `root`. */
-export function buildTarball(root, files, wrapper) {
+/** The tarball bytes: each of `files` (`{ path, file }`, see shippedFiles) under `wrapper/`. */
+export function buildTarball(files, wrapper) {
   const blocks = []
-  for (const file of files) {
-    const content = readFileSync(join(root, file))
-    blocks.push(ustarHeader(`${wrapper}/${file}`, content.length), content)
+  for (const { path, file } of files) {
+    const content = readFileSync(file)
+    blocks.push(ustarHeader(`${wrapper}/${path}`, content.length), content)
     const pad = (512 - (content.length % 512)) % 512
     if (pad > 0) blocks.push(Buffer.alloc(pad, 0))
   }
@@ -113,7 +119,7 @@ export function stageSite(root, outDir, options = {}) {
   const runId = options.runId ?? process.env.GITHUB_RUN_ID ?? process.env.WORKERS_CI_BUILD_UUID?.slice(0, 8) ?? 'local'
   const catalog = JSON.parse(readFileSync(join(root, CATALOG_PATH), 'utf8'))
   const files = shippedFiles(root)
-  const tarball = buildTarball(root, files, `plugins-marketplace-${short}`)
+  const tarball = buildTarball(files, `plugins-marketplace-${short}`)
   const index = {
     name: catalog.name,
     buildId: `${short}-${runId}`,
@@ -123,6 +129,7 @@ export function stageSite(root, outDir, options = {}) {
     sha256: createHash('sha256').update(tarball).digest('hex'),
     size: tarball.length,
     plugins: catalog.plugins.map(p => p.name),
+    sources: readSources(root).sources.map(s => ({ repo: s.repo, commit: s.commit, plugins: s.plugins.map(p => p.name) })),
   }
   rmSync(outDir, { recursive: true, force: true })
   mkdirSync(outDir, { recursive: true })
