@@ -5,6 +5,7 @@
 # Needs the secret MARKETPLACE_TOKEN: a fine-grained token on
 # claude-code-mods/plugins-marketplace with Contents and Pull requests
 # read/write (a token, not GITHUB_TOKEN, so the pull request runs CI).
+# Without the secret every step is skipped.
 
 name: Bump the marketplace pin
 
@@ -26,17 +27,24 @@ jobs:
     env:
       MARKETPLACE: claude-code-mods/plugins-marketplace
       GH_TOKEN: ${{ secrets.MARKETPLACE_TOKEN }}
+      HAS_TOKEN: ${{ secrets.MARKETPLACE_TOKEN != '' }}
     steps:
-      - uses: actions/checkout@v7
+      - if: env.HAS_TOKEN != 'true'
+        run: echo "::notice::MARKETPLACE_TOKEN is not set; the marketplace pin is not bumped"
+      - if: env.HAS_TOKEN == 'true'
+        uses: actions/checkout@v7
         with:
           repository: ${{ env.MARKETPLACE }}
           token: ${{ secrets.MARKETPLACE_TOKEN }}
-      - uses: actions/setup-node@v7
+      - if: env.HAS_TOKEN == 'true'
+        uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Pin sources.json to this commit
+        if: env.HAS_TOKEN == 'true'
         run: node scripts/bump_source.mjs "$GITHUB_REPOSITORY" "$GITHUB_SHA"
       - name: Open or move the pull request
+        if: env.HAS_TOKEN == 'true'
         run: |
           if git diff --quiet; then
             echo "the pin is already at $GITHUB_SHA"

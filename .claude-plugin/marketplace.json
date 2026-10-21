@@ -20,6 +20,14 @@
       "category": "mods",
       "onByDefault": false,
       "betaOnly": true
+    },
+    {
+      "name": "nebius",
+      "description": "Nebius Token Factory: its open-weight models as a provider, and its Sandboxes as MCP tools with a status pane, lanes for parallel development and a parallel test matrix.",
+      "source": "./plugins/nebius",
+      "category": "providers",
+      "onByDefault": false,
+      "betaOnly": true
     }
   ]
 }
