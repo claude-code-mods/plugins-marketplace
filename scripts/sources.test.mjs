@@ -79,6 +79,11 @@ const REPO_FILES = [
 const ROOT_FILES = [
   { path: 'README.md', content: 'repo readme' },
   { path: '.github/workflows/ci.yml', content: 'on: push' },
+  { path: 'tests/rooted.test.mjs', content: 'test' },
+  { path: 'package.json', content: '{}' },
+  { path: 'package-lock.json', content: '{}' },
+  { path: '.gitignore', content: 'node_modules/' },
+  { path: 'docs/package.json', content: 'kept: only top-level entries are dev files' },
   { path: '.claude-plugin/plugin.json', content: manifest('rooted', '1.0.0') },
   { path: 'skills/hi/SKILL.md', content: '---\nname: hi\ndescription: hi\n---\n' },
 ]
@@ -127,7 +132,7 @@ test('the tar reader follows pax paths and skips the global header', () => {
   assert.ok(!entries.some(e => e.path === 'pax_global_header' || e.path === 'PaxHeader'))
 })
 
-test('fetches each plugin to .sources/<name>/, a root plugin without .github/', async () => {
+test('fetches each plugin to .sources/<name>/, a root plugin without its development files', async () => {
   const root = scratch({})
   const seen = []
   const record = await fetchSources(root, { fetchImpl: fakeFetch(served(), seen), token: 't0k' })
@@ -139,7 +144,10 @@ test('fetches each plugin to .sources/<name>/, a root plugin without .github/', 
   assert.equal(seen[0].init.headers.authorization, 'Bearer t0k')
   assert.ok(existsSync(join(root, '.sources', 'rooted', 'README.md')))
   assert.ok(existsSync(join(root, '.sources', 'rooted', 'skills', 'hi', 'SKILL.md')))
-  assert.ok(!existsSync(join(root, '.sources', 'rooted', '.github')))
+  for (const dev of ['.github', 'tests', 'package.json', 'package-lock.json', '.gitignore']) {
+    assert.ok(!existsSync(join(root, '.sources', 'rooted', dev)), dev)
+  }
+  assert.ok(existsSync(join(root, '.sources', 'rooted', 'docs', 'package.json')))
   assert.equal(readFileSync(join(root, '.sources', 'nested', ...longName.split('/')), 'utf8'), 'long')
   assert.ok(!existsSync(join(root, '.sources', 'nested', 'plugins')))
   assert.deepEqual(checkMarketplace(root), [])
@@ -210,6 +218,7 @@ test('a fetched plugin ships as plugins/<name>/ and the index names its pin', as
     `plugins/nested/${longName}`,
     'plugins/rooted/.claude-plugin/plugin.json',
     'plugins/rooted/README.md',
+    'plugins/rooted/docs/package.json',
     'plugins/rooted/skills/hi/SKILL.md',
   ])
   assert.ok(!gunzipSync(readFileSync(join(out, TARBALL_NAME))).includes(Buffer.from('fetched.json')))
@@ -221,5 +230,6 @@ test('the bump moves one listed pin and refuses the rest', () => {
   assert.equal(JSON.parse(readFileSync(join(root, 'sources.json'), 'utf8')).sources[1].commit, SHA_B)
   assert.deepEqual(bumpSource(root, 'example/more-plugins', SHA_B), { from: SHA_B, to: SHA_B })
   assert.throws(() => bumpSource(root, 'example/elsewhere', SHA_B), /not in sources\.json/)
+  assert.deepEqual(bumpSource(root, 'example/elsewhere', SHA_B, { ifListed: true }), { listed: false })
   assert.throws(() => bumpSource(root, 'example/more-plugins', 'HEAD'), /not a full 40-character/)
 })

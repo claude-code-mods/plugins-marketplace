@@ -3,13 +3,17 @@
  * Downloads each repository in `sources.json` from codeload at its pinned
  * commit and writes every listed plugin to `.sources/<name>/` (the folder is
  * replaced), plus `.sources/fetched.json`. Path `.` is the repository root
- * without `.github/`. Fails on a link, a path leaving the plugin, an empty
- * plugin or an invalid sources.json. `GITHUB_TOKEN`, when set, is sent.
+ * without its development files (ROOT_DEV_ENTRIES). Fails on a link, a path
+ * leaving the plugin, an empty plugin or an invalid sources.json.
+ * `GITHUB_TOKEN`, when set, is sent.
  */
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { FETCHED_DIR, FETCHED_RECORD, readSources } from './sources.mjs'
 import { readTarEntries } from './tar_read.mjs'
+
+/** Top-level entries of a root-layout repository that never ship to a client. */
+export const ROOT_DEV_ENTRIES = new Set(['.github', 'tests', 'node_modules', 'package.json', 'package-lock.json', '.gitignore'])
 
 export function codeloadUrl(repo, commit) {
   return `https://codeload.github.com/${repo}/tar.gz/${commit}`
@@ -30,7 +34,7 @@ export function pluginFiles(entries, path, where) {
     const rel = entry.path.replace(/\/$/, '')
     if (!rel.startsWith(prefix) || rel === path) continue
     const inside = rel.slice(prefix.length)
-    if (path === '.' && (inside === '.github' || inside.startsWith('.github/'))) continue
+    if (path === '.' && ROOT_DEV_ENTRIES.has(inside.split('/')[0])) continue
     if (entry.type === 'dir') continue
     if (entry.type !== 'file') throw new Error(`${where}: ${rel} is a ${entry.type === 'link' ? 'link' : 'special entry'}; a plugin ships regular files only`)
     if (inside.split('/').some(part => part === '' || part === '.' || part === '..')) throw new Error(`${where}: ${rel} leaves the plugin folder`)

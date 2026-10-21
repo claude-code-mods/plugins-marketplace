@@ -42,7 +42,7 @@ jobs:
           node-version: 22
       - name: Pin sources.json to this commit
         if: env.HAS_TOKEN == 'true'
-        run: node scripts/bump_source.mjs "$GITHUB_REPOSITORY" "$GITHUB_SHA"
+        run: node scripts/bump_source.mjs --if-listed "$GITHUB_REPOSITORY" "$GITHUB_SHA"
       - name: Open or move the pull request
         if: env.HAS_TOKEN == 'true'
         run: |
