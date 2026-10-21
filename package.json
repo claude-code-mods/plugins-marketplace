@@ -11,7 +11,7 @@
     "fetch": "node scripts/fetch_sources.mjs",
     "check": "node scripts/check_marketplace.mjs",
     "stage": "node scripts/stage_site.mjs",
-    "test": "node --test scripts/stage_site.test.mjs scripts/sources.test.mjs",
+    "test": "node --test scripts/stage_site.test.mjs scripts/sources.test.mjs scripts/new_mod.test.mjs",
     "build": "npm run fetch && npm run check && npm test && npm run stage",
     "deploy": "npm run build && wrangler deploy"
   },

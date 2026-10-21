@@ -21,6 +21,6 @@ jobs:
           node-version: 22
       - run: node scripts/fetch_sources.mjs
       - run: node scripts/check_marketplace.mjs
-      - run: node --test scripts/stage_site.test.mjs scripts/sources.test.mjs
+      - run: node --test scripts/stage_site.test.mjs scripts/sources.test.mjs scripts/new_mod.test.mjs
       - run: node scripts/stage_site.mjs . site
       - run: cat site/index.json

@@ -20,6 +20,7 @@ plugins/<name>/hooks/hooks.json             a mod: {"modules": ["./register.js"]
 sources.json                         plugins kept in other GitHub repositories, each pinned to a commit
 scripts/fetch_sources.mjs            downloads them into .sources/<name>/ (never committed)
 scripts/bump_source.mjs              moves one repository's pin
+scripts/new_mod.mjs                  starts a mod in its own repository and registers it
 scripts/check_marketplace.mjs        the gate every change passes
 scripts/stage_site.mjs               builds site/ (what the origin serves)
 templates/bump-marketplace-pin.yml   the workflow a source repository copies
@@ -54,8 +55,10 @@ wrangler.toml                        the Cloudflare worker
 
 ## Plugins from other repositories
 
-A plugin may live in another public GitHub repository. `sources.json` pins
-that repository to one commit and names the plugins taken from it:
+A plugin may live in another public GitHub repository; the usual shape is one
+mod per repository with the plugin at its root (`VellocLabs/Nebius-Mod`).
+`sources.json` pins each repository to one commit and names the plugins
+taken from it:
 
 ```json
 {
@@ -73,7 +76,8 @@ that repository to one commit and names the plugins taken from it:
 ```
 
 - `path` is the plugin's folder in that repository; `.` means the
-  repository root is the plugin (its `.github/` is left out).
+  repository root is the plugin, without its top-level `.github/`, `tests/`,
+  `node_modules/`, `package.json`, `package-lock.json` and `.gitignore`.
 - Every plugin named here also needs its listing in
   `.claude-plugin/marketplace.json` (`source: "./plugins/<name>"`, plus
   `description`, `onByDefault`, `betaOnly`), and no `plugins/<name>/`
@@ -84,14 +88,31 @@ that repository to one commit and names the plugins taken from it:
   ships them as `plugins/<name>/`, and `index.json` lists the pins under
   `sources`.
 
-Adding a repository: add its entry to `sources.json` and its listings to
-the catalog, then copy `templates/bump-marketplace-pin.yml` into that
-repository's `.github/workflows/` and give it the secret
-`MARKETPLACE_TOKEN` (a fine-grained token on this repository with Contents
-and Pull requests read/write). From then on every push to its `main`
-opens, or moves, one pull request here that changes the pin; CI fetches and
-checks it, and merging it is the release. By hand:
-`node scripts/bump_source.mjs owner/name <sha>`.
+A new mod, in one command (needs `gh` signed in):
+
+```bash
+MARKETPLACE_TOKEN=<token> node scripts/new_mod.mjs <name> --description "<one line>" \
+  [--repo VellocLabs/<Repo>] [--dir <path>] [--category mods] [--off] [--beta]
+```
+
+It creates the repository from the template `VellocLabs/mod-template` (root
+layout, an example hook, tests, CI, the pin workflow), renames the
+template's placeholders, pushes, sets `MARKETPLACE_REPO` and, when the
+environment has it, the `MARKETPLACE_TOKEN` secret, and adds the repository to `sources.json` and its listing
+to the catalog. `--off` installs it switched off, `--beta` lists it on the
+beta channel only. Then `npm run build`, commit, and merge here.
+
+A source repository carries the variable `MARKETPLACE_REPO` (this
+repository's owner/name) and the secret `MARKETPLACE_TOKEN` (a fine-grained
+token on this repository with Contents and Pull requests read/write). With
+them, every push to a source repository's
+`main` opens, or moves, one pull request here that changes the pin
+(`templates/bump-marketplace-pin.yml`, which the template carries); CI
+fetches and checks it, and merging it is the release. Without either, or
+before the repository is listed on `main` here, the workflow does nothing.
+By hand: `node scripts/bump_source.mjs owner/name <sha>`. An existing
+repository joins the same way: its entry in `sources.json`, its listing,
+and the workflow copied into its `.github/workflows/`.
 
 The version rule holds there too: a client upgrades an installed plugin
 only when its `plugin.json` `version` is higher, so a change in the other
