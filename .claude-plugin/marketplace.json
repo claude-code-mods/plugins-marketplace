@@ -7,27 +7,11 @@
   },
   "plugins": [
     {
-      "name": "velloc-starter-skills",
-      "description": "Skills for a first session: how Velloc works and what to ask it.",
-      "source": "./plugins/velloc-starter-skills",
-      "category": "productivity",
-      "onByDefault": true
-    },
-    {
-      "name": "velloc-turn-timer",
-      "description": "A mod that shows how long each turn took in the status line.",
-      "source": "./plugins/velloc-turn-timer",
-      "category": "mods",
-      "onByDefault": false,
-      "betaOnly": true
-    },
-    {
       "name": "nebius",
       "description": "Nebius Token Factory: its open-weight models as a provider, and its Sandboxes as MCP tools with a status pane, lanes for parallel development and a parallel test matrix.",
       "source": "./plugins/nebius",
       "category": "providers",
-      "onByDefault": false,
-      "betaOnly": true
+      "onByDefault": true
     }
   ]
 }
