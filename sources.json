@@ -2,7 +2,7 @@
   "sources": [
     {
       "repo": "VellocLabs/Nebius-Mod",
-      "commit": "dbbcd2fa565d81cb4fb626a02539f6404053662c",
+      "commit": "fa8cbf1c313b949c84beed64e12f4c5ee0de3e4c",
       "plugins": [
         {
           "name": "nebius",
