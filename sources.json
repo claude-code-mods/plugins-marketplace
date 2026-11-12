@@ -12,7 +12,7 @@
     },
     {
       "repo": "VellocLabs/Paypal-Desk-Mod",
-      "commit": "5bda095e199050672060c7407af9332e82d04845",
+      "commit": "58712616fca2a76527df84e5c8ae8be0781cc951",
       "plugins": [
         {
           "name": "paypal-desk",
