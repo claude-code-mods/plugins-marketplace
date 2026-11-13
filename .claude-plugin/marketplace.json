@@ -19,6 +19,13 @@
       "source": "./plugins/paypal-desk",
       "category": "mods",
       "betaOnly": true
+    },
+    {
+      "name": "opencode-go",
+      "description": "OpenCode Go subscription models in Velloc: the gateway's live model list, plan usage windows and the session header the gateway requires.",
+      "source": "./plugins/opencode-go",
+      "category": "providers",
+      "onByDefault": true
     }
   ]
 }
