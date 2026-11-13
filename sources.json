@@ -22,7 +22,7 @@
     },
     {
       "repo": "claude-code-mods/OpenCode-Go-Mod",
-      "commit": "26dd9ef00bae42a630fd8076c41c6f786dad6783",
+      "commit": "c13d6bb19858c11abcd1d53e9eb39fb183c52cf4",
       "plugins": [
         {
           "name": "opencode-go",
