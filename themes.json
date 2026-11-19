@@ -238,7 +238,7 @@
     },
     {
       "name": "snowfall-theme",
-      "listed": false,
+      "listed": true,
       "repo": "Brezn610/snowfall-theme",
       "path": ".",
       "commit": "f85941aa9fccfdf09b9a8a321acad352c1622fce",
@@ -257,7 +257,7 @@
     },
     {
       "name": "rainy-window",
-      "listed": false,
+      "listed": true,
       "repo": "ishuagrawal/claude-code-themes",
       "path": "themes/rainy-window",
       "commit": "ae7d9d6d9fb98b2409d26d405dfbc230f2be864a",
@@ -276,7 +276,7 @@
     },
     {
       "name": "gradient-flow",
-      "listed": false,
+      "listed": true,
       "repo": "AkkiCode06/claude-backdrops",
       "path": ".",
       "commit": "7f0f0b7fec29d1352131fa285807813cfaa6ba54",
@@ -294,7 +294,7 @@
     },
     {
       "name": "looks",
-      "listed": false,
+      "listed": true,
       "repo": "markimoo09/claude-code-themes",
       "path": ".",
       "commit": "d8e9dffc9e8aa9cd829951af105d8753c9f46685",
@@ -363,7 +363,7 @@
     },
     {
       "name": "holo-damascus",
-      "listed": false,
+      "listed": true,
       "repo": "bassonrichard/holo-damascus",
       "path": ".",
       "commit": "4b6c08751aa3a4260155e1d85d416b07460bd97b",
@@ -382,7 +382,7 @@
     },
     {
       "name": "hive-night",
-      "listed": false,
+      "listed": true,
       "repo": "Errr0rr404/hive-night",
       "path": ".",
       "commit": "b1a42a1891228106a1c2ba3d461e0c47ab915a54",
@@ -400,7 +400,7 @@
     },
     {
       "name": "spacemolt-theme",
-      "listed": false,
+      "listed": true,
       "repo": "SpaceMolt/claude-code-theme",
       "path": ".",
       "commit": "4a6ce12ac44be46dfd8bc41e3e603925340a923a",
@@ -419,7 +419,7 @@
     },
     {
       "name": "backdrops",
-      "listed": false,
+      "listed": true,
       "repo": "donvito/skillsbento",
       "path": "plugins/backdrops",
       "commit": "c06e9076b5a233ba197b38e74c4a4909ccf6c022",
@@ -438,7 +438,7 @@
     },
     {
       "name": "bubblegum-fizz",
-      "listed": false,
+      "listed": true,
       "repo": "HemalathaMadeswaran18/bubblegum-fizz",
       "path": ".",
       "commit": "91513ca21c1f7cf328e4b74bcf17e802b7f1db2a",
@@ -457,7 +457,7 @@
     },
     {
       "name": "aurora",
-      "listed": false,
+      "listed": true,
       "repo": "00015972/claude-aurora",
       "path": ".",
       "commit": "24c97b79fd1fc3d24c796959a84eeda402c05c9b",
@@ -476,7 +476,7 @@
     },
     {
       "name": "lewell-theme",
-      "listed": false,
+      "listed": true,
       "repo": "kimthangk/claude-theme-lewell",
       "path": ".",
       "commit": "3944df464ffdd1503310912ccc560020a4e02f01",
@@ -495,7 +495,7 @@
     },
     {
       "name": "bat-cave",
-      "listed": false,
+      "listed": true,
       "repo": "Sumit189/bat-cave",
       "path": ".",
       "commit": "a4eaeb8efaef82ad504cb11b52ef037087666c68",
@@ -514,7 +514,7 @@
     },
     {
       "name": "wired-dusk",
-      "listed": false,
+      "listed": true,
       "repo": "zZero111/wired-dusk",
       "path": ".",
       "commit": "92c0cf261b9ab6962d3b416e8a594a9520cfd7d9",
@@ -533,7 +533,7 @@
     },
     {
       "name": "garden-theme",
-      "listed": false,
+      "listed": true,
       "repo": "cktang88/claude-garden-theme",
       "path": ".",
       "commit": "e1feda2ac9bb3df3bb28ce122ad5fee6921f71d6",
@@ -552,7 +552,7 @@
     },
     {
       "name": "looks-malaysia",
-      "listed": false,
+      "listed": true,
       "repo": "aimanamri/claude-code-themes",
       "path": ".",
       "commit": "6c1291fdd02ab5b95f2c2e851d254ab9ad9f216c",
