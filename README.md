@@ -18,6 +18,8 @@ plugins/<name>/.claude-plugin/plugin.json   name (= folder), version (required),
 plugins/<name>/skills/<skill>/SKILL.md      a skill plugin
 plugins/<name>/hooks/hooks.json             a mod: {"modules": ["./register.js"]} beside register.js
 sources.json                         plugins kept in other GitHub repositories, each pinned to a commit
+themes.json                          theme plugins in other repositories; the `listed` ones are published
+previews/<name>/                     the preview pictures themes.json names
 scripts/fetch_sources.mjs            downloads them into .sources/<name>/ (never committed)
 scripts/bump_source.mjs              moves one repository's pin
 scripts/new_mod.mjs                  starts a mod in its own repository and registers it
@@ -118,12 +120,59 @@ The version rule holds there too: a client upgrades an installed plugin
 only when its `plugin.json` `version` is higher, so a change in the other
 repository bumps it before it is pinned here.
 
+## Themes
+
+`themes.json` records theme plugins that live in other GitHub repositories.
+A script outside this repository maintains it; nothing here rewrites it.
+
+```json
+{
+  "version": 1,
+  "plugins": [
+    {
+      "name": "a-theme", "listed": false,
+      "repo": "owner/name", "path": ".", "commit": "<full 40-character sha>",
+      "version": "1.0.0", "description": "One line.", "author": "Who",
+      "looks": [
+        { "id": "night", "name": "Night", "appearance": "dark",
+          "preview": "previews/a-theme/night.svg",
+          "use": { "command": "pick-look", "args": "night" } }
+      ]
+    }
+  ]
+}
+```
+
+- `listed` decides publication. `false` keeps the record here and publishes
+  nothing; `true` (which needs a `version`) publishes it with the next build.
+- The stager adds one listing per listed record to the `marketplace.json`
+  inside the tarball; `.claude-plugin/marketplace.json` in this repository
+  is not changed. The listing has `category: "theme"`, a `theme` block with
+  the looks as written, and a `source` a client installs from directly:
+  `{ "source": "github", "repo", "sha" }` when `path` is `.`, otherwise
+  `{ "source": "git-subdir", "url": "https://github.com/<repo>", "path", "sha" }`.
+- A theme's code is never shipped: no `plugins/<name>/` folder, no entry in
+  `sources.json`, and it is not in `index.json` `plugins`. A client shows it
+  in its theme directory and installs it only when the person picks it.
+- A look's `preview` is a picture under `previews/` here (svg, webp, png,
+  jpg, jpeg or gif, at most 1.5 MB) or a
+  `https://raw.githubusercontent.com/<owner>/<repo>/<40-hex sha>/...` address.
+  The local pictures of listed records are copied to `site/previews/` and
+  served at the same relative path.
+- The check validates every record, listed or not: names unique and not used
+  by the catalog or `sources.json`, `repo` as `owner/name`, a full commit
+  sha, a `path` inside the repository, look ids `[a-z0-9][a-z0-9-]*` unique
+  per plugin, `use.command` one word and `use.args` `[a-z0-9-]{0,64}`.
+
 ## What the origin serves
 
 | Path | Content | Cache |
 | --- | --- | --- |
 | `/marketplace.tar.gz` | this repository's `.claude-plugin/` and `plugins/`, plus every fetched plugin as `plugins/<name>/`, as a gzip tar with one wrapper directory | `no-cache` |
 | `/index.json` | `{ name, buildId, generatedAt, sourceCommit, tarball, sha256, size, plugins, sources }` | `no-cache` |
+| `/previews/<name>/<file>` | the preview pictures of the listed themes | `no-cache` |
+
+Any other path is a 404.
 
 A client downloads the tarball on its first start, then reads `index.json`
 once a day and downloads again only when `buildId` changed, checking

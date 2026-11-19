@@ -1,0 +1,573 @@
+{
+  "version": 1,
+  "plugins": [
+    {
+      "name": "theme-examples",
+      "listed": true,
+      "repo": "anthropics/claude-plugins-official",
+      "path": "plugins/theme-examples",
+      "commit": "6d491811023d7af2c96a7fab274935922b29ed01",
+      "version": "0.4.3",
+      "description": "Twenty animated backdrops, light and dark: a lagoon, a night reef, a koi pond, halftone sunrises, a departure board, a braille starfield and more. Pick one with /custom-theme.",
+      "author": "Anthropic",
+      "official": true,
+      "title": "Theme Examples (all 20 scenes)",
+      "preview": "previews/theme-examples/koi-mosaic.svg",
+      "looks": [
+        {
+          "id": "honu-lagoon",
+          "name": "Honu Lagoon",
+          "description": "A live ASCII lagoon from above: a tile turtle swims by a sand island.",
+          "appearance": "light",
+          "preview": "previews/theme-examples/honu-lagoon.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "honu-lagoon"
+          }
+        },
+        {
+          "id": "koi-mosaic",
+          "name": "Koi Mosaic",
+          "description": "A tiled koi pond from above: two koi, lily pads, slow ripples.",
+          "appearance": "light",
+          "preview": "previews/theme-examples/koi-mosaic.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "koi-mosaic"
+          }
+        },
+        {
+          "id": "halftone-dawn",
+          "name": "Halftone Dawn",
+          "description": "A two-ink riso sunrise: halftone dots that breathe outward.",
+          "appearance": "light",
+          "preview": "previews/theme-examples/halftone-dawn.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "halftone-dawn"
+          }
+        },
+        {
+          "id": "halftone-dusk",
+          "name": "Halftone Dusk",
+          "description": "The riso sunrise on night-blue stock: an ember sun in breathing dots.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/halftone-dusk.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "halftone-dusk"
+          }
+        },
+        {
+          "id": "plotter-tide",
+          "name": "Plotter Tide",
+          "description": "Pen-plotter tide lines drawing themselves on warm paper.",
+          "appearance": "light",
+          "preview": "previews/theme-examples/plotter-tide.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "plotter-tide"
+          }
+        },
+        {
+          "id": "plotter-tide-night",
+          "name": "Plotter Tide, Night",
+          "description": "The plotter's tide chart in pale ink on blue-black night paper.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/plotter-tide-night.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "plotter-tide-night"
+          }
+        },
+        {
+          "id": "dither-dunes",
+          "name": "Dither Dunes",
+          "description": "One-bit dunes on sand paper, shaded in dots, under a terracotta sun.",
+          "appearance": "light",
+          "preview": "previews/theme-examples/dither-dunes.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "dither-dunes"
+          }
+        },
+        {
+          "id": "dither-dunes-night",
+          "name": "Dither Dunes Night",
+          "description": "The same dunes after dark: pale dots on umber, an ember sun.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/dither-dunes-night.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "dither-dunes-night"
+          }
+        },
+        {
+          "id": "paper-garden",
+          "name": "Paper Garden",
+          "description": "Cut-paper leaves at the edges of a warm white sheet, one coral bloom.",
+          "appearance": "light",
+          "preview": "previews/theme-examples/paper-garden.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "paper-garden"
+          }
+        },
+        {
+          "id": "paper-garden-kraft",
+          "name": "Paper Garden, Kraft",
+          "description": "Cut-paper leaves at the edges of dark kraft paper, one coral bloom.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/paper-garden-kraft.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "paper-garden-kraft"
+          }
+        },
+        {
+          "id": "night-reef",
+          "name": "Night Reef",
+          "description": "The lagoon after dark: a turtle and a ray that glow as they swim.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/night-reef.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "night-reef"
+          }
+        },
+        {
+          "id": "snow-pines",
+          "name": "Snow Pines",
+          "description": "An ASCII pine forest at dusk, snow drifting down through the trees.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/snow-pines.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "snow-pines"
+          }
+        },
+        {
+          "id": "braille-stars",
+          "name": "Braille Stars",
+          "description": "A slow night sky drawn dot by dot on a braille grid.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/braille-stars.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "braille-stars"
+          }
+        },
+        {
+          "id": "teletext-clouds",
+          "name": "Block Clouds",
+          "description": "Night clouds built from blocks on a teletext grid, drifting in.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/teletext-clouds.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "teletext-clouds"
+          }
+        },
+        {
+          "id": "vector-range",
+          "name": "Vector Range",
+          "description": "Phosphor mountains on black; an amber beam keeps retracing them.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/vector-range.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "vector-range"
+          }
+        },
+        {
+          "id": "departure-board",
+          "name": "Departure Board",
+          "description": "An amber LED board re-lettering itself, row by row.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/departure-board.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "departure-board"
+          }
+        },
+        {
+          "id": "blueprint",
+          "name": "Blueprint",
+          "description": "A cyanotype sheet; a comet goes round its plotted orbit in the corner.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/blueprint.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "blueprint"
+          }
+        },
+        {
+          "id": "deep-water",
+          "name": "Deep Water",
+          "description": "Light falling through deep water, and one quiet turtle.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/deep-water.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "deep-water"
+          }
+        },
+        {
+          "id": "aurora",
+          "name": "Aurora",
+          "description": "Northern lights swaying over a dark ridge.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/aurora.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "aurora"
+          }
+        },
+        {
+          "id": "ember",
+          "name": "Ember",
+          "description": "A warm glow in the corners and a few embers rising.",
+          "appearance": "dark",
+          "preview": "previews/theme-examples/ember.svg",
+          "use": {
+            "command": "custom-theme",
+            "args": "ember"
+          }
+        }
+      ]
+    },
+    {
+      "name": "snowfall-theme",
+      "listed": false,
+      "repo": "Brezn610/snowfall-theme",
+      "path": ".",
+      "commit": "f85941aa9fccfdf09b9a8a321acad352c1622fce",
+      "version": "0.2.1",
+      "description": "A moonlit cabin and pines under falling snow that reacts to your session: the snowfall grows as the context window fills, with a ring badge showing how full it is.",
+      "author": "Brezn610",
+      "looks": [
+        {
+          "id": "snowfall-theme",
+          "name": "Snowfall",
+          "description": "A moonlit cabin and pines under falling snow that reacts to your session: the snowfall grows as the context window fills, with a ring badge showing how full it is.",
+          "appearance": "dark",
+          "preview": "previews/snowfall-theme/snowfall.svg"
+        }
+      ]
+    },
+    {
+      "name": "rainy-window",
+      "listed": false,
+      "repo": "ishuagrawal/claude-code-themes",
+      "path": "themes/rainy-window",
+      "commit": "ae7d9d6d9fb98b2409d26d405dfbc230f2be864a",
+      "version": "0.3.0",
+      "description": "Clawd's room on a rainy day in halftone dots: rain at the window and a record spinning.",
+      "author": "ishuagrawal",
+      "looks": [
+        {
+          "id": "rainy-window",
+          "name": "Rainy Window",
+          "description": "Clawd's room on a rainy day in halftone dots: rain at the window and a record spinning.",
+          "appearance": "both",
+          "preview": "https://raw.githubusercontent.com/ishuagrawal/claude-code-themes/ae7d9d6d9fb98b2409d26d405dfbc230f2be864a/assets/rainy-window.gif"
+        }
+      ]
+    },
+    {
+      "name": "gradient-flow",
+      "listed": false,
+      "repo": "AkkiCode06/claude-backdrops",
+      "path": ".",
+      "commit": "7f0f0b7fec29d1352131fa285807813cfaa6ba54",
+      "version": "0.6.0",
+      "description": "A theming kit: pick one of 23 animated palettes, describe a look, or paste your own colors. No mod to write.",
+      "author": "AkkiCode06",
+      "looks": [
+        {
+          "id": "gradient-flow",
+          "name": "Backdrop",
+          "description": "A theming kit: pick one of 23 animated palettes, describe a look, or paste your own colors. No mod to write.",
+          "preview": "https://raw.githubusercontent.com/AkkiCode06/claude-backdrops/7f0f0b7fec29d1352131fa285807813cfaa6ba54/assets/sunset-in-la.gif"
+        }
+      ]
+    },
+    {
+      "name": "looks",
+      "listed": false,
+      "repo": "markimoo09/claude-code-themes",
+      "path": ".",
+      "commit": "d8e9dffc9e8aa9cd829951af105d8753c9f46685",
+      "version": "0.1.0",
+      "description": "A tilted black hole and a turning spiral galaxy over cyan, violet and ember nebulae.",
+      "author": "markimoo09",
+      "title": "Cosmos",
+      "preview": "https://raw.githubusercontent.com/markimoo09/claude-code-themes/d8e9dffc9e8aa9cd829951af105d8753c9f46685/preview-cosmos.png",
+      "looks": [
+        {
+          "id": "cosmos",
+          "name": "Cosmos",
+          "description": "A tilted black hole and a turning spiral galaxy over cyan, violet and ember nebulae.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/markimoo09/claude-code-themes/d8e9dffc9e8aa9cd829951af105d8753c9f46685/preview-cosmos.png",
+          "use": {
+            "command": "custom-theme",
+            "args": "cosmos"
+          }
+        },
+        {
+          "id": "pixel-cats",
+          "name": "Pixel Cats",
+          "description": "Pixel art of two fluffy cats in a sunny room.",
+          "appearance": "light",
+          "preview": "https://raw.githubusercontent.com/markimoo09/claude-code-themes/d8e9dffc9e8aa9cd829951af105d8753c9f46685/preview-pixel-cats.png",
+          "use": {
+            "command": "custom-theme",
+            "args": "pixel-cats"
+          }
+        },
+        {
+          "id": "dark-fleet",
+          "name": "Dark Fleet",
+          "description": "Cinematic space opera: a hooded warrior, a wedge-shaped fleet and a moon-sized battle station.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/markimoo09/claude-code-themes/d8e9dffc9e8aa9cd829951af105d8753c9f46685/preview-dark-fleet.png",
+          "use": {
+            "command": "custom-theme",
+            "args": "dark-fleet"
+          }
+        },
+        {
+          "id": "neon-tokyo",
+          "name": "Neon Tokyo",
+          "description": "Pixel-art Tokyo at night with neon signs, a scramble crossing and a cat on a vending machine.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/markimoo09/claude-code-themes/d8e9dffc9e8aa9cd829951af105d8753c9f46685/preview-neon-tokyo.png",
+          "use": {
+            "command": "custom-theme",
+            "args": "neon-tokyo"
+          }
+        },
+        {
+          "id": "marina-bay",
+          "name": "Marina Bay",
+          "description": "Pixel-art Singapore at night across Marina Bay, with a laser show and glowing Supertrees.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/markimoo09/claude-code-themes/d8e9dffc9e8aa9cd829951af105d8753c9f46685/preview-marina-bay.png",
+          "use": {
+            "command": "custom-theme",
+            "args": "marina-bay"
+          }
+        }
+      ]
+    },
+    {
+      "name": "holo-damascus",
+      "listed": false,
+      "repo": "bassonrichard/holo-damascus",
+      "path": ".",
+      "commit": "4b6c08751aa3a4260155e1d85d416b07460bd97b",
+      "version": "0.2.1",
+      "description": "Pearl white with prismatic Damascus contour lines; black foil in dark mode.",
+      "author": "bassonrichard",
+      "looks": [
+        {
+          "id": "holo-damascus",
+          "name": "Holo Damascus",
+          "description": "Pearl white with prismatic Damascus contour lines; black foil in dark mode.",
+          "appearance": "both",
+          "preview": "https://raw.githubusercontent.com/bassonrichard/holo-damascus/4b6c08751aa3a4260155e1d85d416b07460bd97b/docs/dark.png"
+        }
+      ]
+    },
+    {
+      "name": "hive-night",
+      "listed": false,
+      "repo": "Errr0rr404/hive-night",
+      "path": ".",
+      "commit": "b1a42a1891228106a1c2ba3d461e0c47ab915a54",
+      "version": "0.1.0",
+      "description": "A hexagon backdrop theme for the Claude desktop app.",
+      "author": "Errr0rr404",
+      "looks": [
+        {
+          "id": "hive-night",
+          "name": "Hive Night",
+          "description": "A hexagon backdrop theme for the Claude desktop app.",
+          "preview": "https://raw.githubusercontent.com/Errr0rr404/hive-night/b1a42a1891228106a1c2ba3d461e0c47ab915a54/docs/preview.png"
+        }
+      ]
+    },
+    {
+      "name": "spacemolt-theme",
+      "listed": false,
+      "repo": "SpaceMolt/claude-code-theme",
+      "path": ".",
+      "commit": "4a6ce12ac44be46dfd8bc41e3e603925340a923a",
+      "version": "1.0.0",
+      "description": "A twinkling starfield with an ember and plasma glow, in the SpaceMolt palette.",
+      "author": "SpaceMolt",
+      "looks": [
+        {
+          "id": "spacemolt-theme",
+          "name": "SpaceMolt",
+          "description": "A twinkling starfield with an ember and plasma glow, in the SpaceMolt palette.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/SpaceMolt/claude-code-theme/4a6ce12ac44be46dfd8bc41e3e603925340a923a/screenshot.png"
+        }
+      ]
+    },
+    {
+      "name": "backdrops",
+      "listed": false,
+      "repo": "donvito/skillsbento",
+      "path": "plugins/backdrops",
+      "commit": "c06e9076b5a233ba197b38e74c4a4909ccf6c022",
+      "version": "1.3.0",
+      "description": "Fourteen scenes with matching dark colors: two Formula 1, six travel scenes and six retro looks.",
+      "author": "donvito",
+      "looks": [
+        {
+          "id": "backdrops",
+          "name": "Backdrops",
+          "description": "Fourteen scenes with matching dark colors: two Formula 1, six travel scenes and six retro looks.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/donvito/skillsbento/c06e9076b5a233ba197b38e74c4a4909ccf6c022/plugins/backdrops/preview.jpg"
+        }
+      ]
+    },
+    {
+      "name": "bubblegum-fizz",
+      "listed": false,
+      "repo": "HemalathaMadeswaran18/bubblegum-fizz",
+      "path": ".",
+      "commit": "91513ca21c1f7cf328e4b74bcf17e802b7f1db2a",
+      "version": "0.1.0",
+      "description": "Strawberry-milk pink by day, glowing berry soda by night, with iridescent bubbles drifting up the edges.",
+      "author": "HemalathaMadeswaran18",
+      "looks": [
+        {
+          "id": "bubblegum-fizz",
+          "name": "Bubblegum Fizz",
+          "description": "Strawberry-milk pink by day, glowing berry soda by night, with iridescent bubbles drifting up the edges.",
+          "appearance": "both",
+          "preview": "previews/bubblegum-fizz/bubblegum-fizz.svg"
+        }
+      ]
+    },
+    {
+      "name": "aurora",
+      "listed": false,
+      "repo": "00015972/claude-aurora",
+      "path": ".",
+      "commit": "24c97b79fd1fc3d24c796959a84eeda402c05c9b",
+      "version": "0.1.0",
+      "description": "Polar night in dark mode, arctic dawn in light mode, with a northern-lights glow along the top of the window.",
+      "author": "00015972",
+      "looks": [
+        {
+          "id": "aurora",
+          "name": "Aurora",
+          "description": "Polar night in dark mode, arctic dawn in light mode, with a northern-lights glow along the top of the window.",
+          "appearance": "both",
+          "preview": "previews/aurora/aurora.svg"
+        }
+      ]
+    },
+    {
+      "name": "lewell-theme",
+      "listed": false,
+      "repo": "kimthangk/claude-theme-lewell",
+      "path": ".",
+      "commit": "3944df464ffdd1503310912ccc560020a4e02f01",
+      "version": "0.6.6",
+      "description": "Pixel-art backdrops with a little moss companion that walks while Claude works and stops when Claude needs you. A snowy Christmas village, plus a city tour of Bangkok, Tokyo, Paris, London, New York, San Francisco and Singapore.",
+      "author": "kimthangk",
+      "looks": [
+        {
+          "id": "lewell-theme",
+          "name": "Christmas Night & City Tour",
+          "description": "Pixel-art backdrops with a little moss companion that walks while Claude works and stops when Claude needs you. A snowy Christmas village, plus a city tour of Bangkok, Tokyo, Paris, London, New York, San Francisco and Singapore.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/kimthangk/claude-theme-lewell/3944df464ffdd1503310912ccc560020a4e02f01/images/christmas.jpg"
+        }
+      ]
+    },
+    {
+      "name": "bat-cave",
+      "listed": false,
+      "repo": "Sumit189/bat-cave",
+      "path": ".",
+      "commit": "a4eaeb8efaef82ad504cb11b52ef037087666c68",
+      "version": "0.12.0",
+      "description": "A black terminal look with a spinning block-character bat and live widgets: a clock, weather, a street map of any place, an RSS feed and a terminal of Claude's tool calls. Arrange them with /bat-cave.",
+      "author": "Sumit189",
+      "looks": [
+        {
+          "id": "bat-cave",
+          "name": "Bat Cave",
+          "description": "A black terminal look with a spinning block-character bat and live widgets: a clock, weather, a street map of any place, an RSS feed and a terminal of Claude's tool calls. Arrange them with /bat-cave.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/Sumit189/bat-cave/a4eaeb8efaef82ad504cb11b52ef037087666c68/docs/backdrop.png"
+        }
+      ]
+    },
+    {
+      "name": "wired-dusk",
+      "listed": false,
+      "repo": "zZero111/wired-dusk",
+      "path": ".",
+      "commit": "92c0cf261b9ab6962d3b416e8a594a9520cfd7d9",
+      "version": "0.1.0",
+      "description": "Power lines humming at a violet dusk over a skyline of lit apartment blocks: signal pulses along the wires, dotted shadows breathing in the corners and CRT scanlines over a near-black purple palette.",
+      "author": "zZero111",
+      "looks": [
+        {
+          "id": "wired-dusk",
+          "name": "Wired Dusk",
+          "description": "Power lines humming at a violet dusk over a skyline of lit apartment blocks: signal pulses along the wires, dotted shadows breathing in the corners and CRT scanlines over a near-black purple palette.",
+          "appearance": "dark",
+          "preview": "https://raw.githubusercontent.com/zZero111/wired-dusk/92c0cf261b9ab6962d3b416e8a594a9520cfd7d9/docs/preview.png"
+        }
+      ]
+    },
+    {
+      "name": "garden-theme",
+      "listed": false,
+      "repo": "cktang88/claude-garden-theme",
+      "path": ".",
+      "commit": "e1feda2ac9bb3df3bb28ce122ad5fee6921f71d6",
+      "version": "1.2.0",
+      "description": "Cream paper with a pencil garden that grows as your session goes on: seedlings turn into flowers, a tree at the edge keeps getting bigger, and a fox looks in now and then. Four hand-drawn dials show context, turn time, session cost and the clock.",
+      "author": "cktang88",
+      "looks": [
+        {
+          "id": "garden-theme",
+          "name": "Garden",
+          "description": "Cream paper with a pencil garden that grows as your session goes on: seedlings turn into flowers, a tree at the edge keeps getting bigger, and a fox looks in now and then. Four hand-drawn dials show context, turn time, session cost and the clock.",
+          "appearance": "light",
+          "preview": "https://raw.githubusercontent.com/cktang88/claude-garden-theme/e1feda2ac9bb3df3bb28ce122ad5fee6921f71d6/docs/preview.gif"
+        }
+      ]
+    },
+    {
+      "name": "looks-malaysia",
+      "listed": false,
+      "repo": "aimanamri/claude-code-themes",
+      "path": ".",
+      "commit": "6c1291fdd02ab5b95f2c2e851d254ab9ad9f216c",
+      "version": "1.3.0",
+      "description": "Seven moving pixel-art backdrops of Malaysia: Kuala Lumpur, Penang, Terengganu, Sepang, Kelantan by night and by day, and Sabah at sunset. Each look also colors headings, quotes and inline code in the chat.",
+      "author": "aimanamri",
+      "looks": [
+        {
+          "id": "looks-malaysia",
+          "name": "Looks Malaysia",
+          "description": "Seven moving pixel-art backdrops of Malaysia: Kuala Lumpur, Penang, Terengganu, Sepang, Kelantan by night and by day, and Sabah at sunset. Each look also colors headings, quotes and inline code in the chat.",
+          "appearance": "both",
+          "preview": "https://raw.githubusercontent.com/aimanamri/claude-code-themes/6c1291fdd02ab5b95f2c2e851d254ab9ad9f216c/assets/preview.png"
+        }
+      ]
+    }
+  ]
+}

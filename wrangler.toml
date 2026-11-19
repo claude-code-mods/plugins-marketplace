@@ -6,7 +6,7 @@ compatibility_date = "2026-05-19"
 main = "worker/asset_gateway.mjs"
 
 [assets]
-# Written by `node scripts/stage_site.mjs`: marketplace.tar.gz, index.json
-# and _headers. Never commit site/.
+# Written by `node scripts/stage_site.mjs`: marketplace.tar.gz, index.json,
+# previews/ (the listed themes' pictures) and _headers. Never commit site/.
 directory = "./site"
 binding = "ASSETS"

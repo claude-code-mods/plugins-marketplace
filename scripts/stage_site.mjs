@@ -3,16 +3,20 @@
  * Builds `site/` (refuses a tree the check does not pass):
  *   marketplace.tar.gz   `.claude-plugin/`, `plugins/` and each fetched plugin as `plugins/<name>/`,
  *                        a gzip POSIX tar under one wrapper directory; sorted, mtime 0, reproducible
+ *                        the catalog in it also lists every `listed` record of themes.json,
+ *                        installed from its own repository (no `plugins/<name>/` here)
  *   index.json           { name, buildId, generatedAt, sourceCommit, tarball, sha256, size, plugins, sources }
- *   _headers             both files `no-cache`; everything else `no-store`
+ *   previews/            the local preview pictures the listed themes' looks name
+ *   _headers             the two files and `previews/` `no-cache`; everything else `no-store`
  */
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { join, posix, relative, resolve, sep } from 'node:path'
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { dirname, join, posix, relative, resolve, sep } from 'node:path'
 import { execSync } from 'node:child_process'
 import { gzipSync } from 'node:zlib'
 import { CATALOG_PATH, checkMarketplace } from './check_marketplace.mjs'
 import { FETCHED_DIR, readSources } from './sources.mjs'
+import { PREVIEWS_DIR, listedPreviewFiles, readThemes, themeListing } from './themes.mjs'
 
 export const TARBALL_NAME = 'marketplace.tar.gz'
 export const INDEX_NAME = 'index.json'
@@ -69,11 +73,14 @@ function ustarHeader(name, size) {
   return header
 }
 
-/** The tarball bytes: each of `files` (`{ path, file }`, see shippedFiles) under `wrapper/`. */
+/**
+ * The tarball bytes: each of `files` (`{ path, file }`, see shippedFiles) under
+ * `wrapper/`. An entry with `content` ships those bytes instead of its file's.
+ */
 export function buildTarball(files, wrapper) {
   const blocks = []
-  for (const { path, file } of files) {
-    const content = readFileSync(file)
+  for (const { path, file, content: given } of files) {
+    const content = given ?? readFileSync(file)
     blocks.push(ustarHeader(`${wrapper}/${path}`, content.length), content)
     const pad = (512 - (content.length % 512)) % 512
     if (pad > 0) blocks.push(Buffer.alloc(pad, 0))
@@ -92,6 +99,14 @@ export const HEADERS = `# The two files a client reads: the edge revalidates eve
   ! Cache-Control
   Cache-Control: no-cache
   Access-Control-Allow-Origin: *
+# Theme preview pictures, named without a content hash, so revalidated too.
+# They come from other repositories: never sniffed, never run as a document.
+/${PREVIEWS_DIR}/*
+  ! Cache-Control
+  Cache-Control: no-cache
+  Access-Control-Allow-Origin: *
+  X-Content-Type-Options: nosniff
+  Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
 /*
   ! Cache-Control
   Cache-Control: no-store
@@ -118,7 +133,15 @@ export function stageSite(root, outDir, options = {}) {
   const short = commit.slice(0, 7)
   const runId = options.runId ?? process.env.GITHUB_RUN_ID ?? process.env.WORKERS_CI_BUILD_UUID?.slice(0, 8) ?? 'local'
   const catalog = JSON.parse(readFileSync(join(root, CATALOG_PATH), 'utf8'))
+  const listed = readThemes(root).listed
   const files = shippedFiles(root)
+  if (listed.length > 0) {
+    // The catalog on disk stays as it is; the shipped one gains the theme listings.
+    const shipped = { ...catalog, plugins: [...catalog.plugins, ...listed.map(themeListing)] }
+    const at = files.findIndex(f => f.path === CATALOG_PATH)
+    files[at] = { ...files[at], content: Buffer.from(`${JSON.stringify(shipped, null, 2)}
+`) }
+  }
   const tarball = buildTarball(files, `plugins-marketplace-${short}`)
   const index = {
     name: catalog.name,
@@ -136,6 +159,11 @@ export function stageSite(root, outDir, options = {}) {
   writeFileSync(join(outDir, TARBALL_NAME), tarball)
   writeFileSync(join(outDir, INDEX_NAME), `${JSON.stringify(index, null, 2)}\n`)
   writeFileSync(join(outDir, '_headers'), HEADERS)
+  for (const preview of listedPreviewFiles(listed)) {
+    const target = join(outDir, ...preview.split('/'))
+    mkdirSync(dirname(target), { recursive: true })
+    copyFileSync(join(root, ...preview.split('/')), target)
+  }
   return index
 }
 

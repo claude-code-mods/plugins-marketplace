@@ -5,11 +5,13 @@
  * version, the two flags are booleans, no name repeats, no path escapes.
  * A plugin named in sources.json is read from its fetched folder, which must
  * match the pinned commit, and must be listed.
+ * themes.json, when present, is checked record by record, listed or not.
  * Exit 1 with every problem listed; exit 0 silent.
  */
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { SOURCES_PATH, pluginFolder, readFetchedRecord, readSources } from './sources.mjs'
+import { readThemes } from './themes.mjs'
 
 export const CATALOG_PATH = '.claude-plugin/marketplace.json'
 export const PLUGIN_MANIFEST = '.claude-plugin/plugin.json'
@@ -88,6 +90,9 @@ export function checkMarketplace(root) {
   for (const [name, pin] of external.plugins) {
     if (!seen.has(name)) problems.push(`${SOURCES_PATH}: "${name}" from ${pin.repo} has no listing in ${CATALOG_PATH}`)
   }
+  const taken = new Map([...seen].map(name => [name, CATALOG_PATH]))
+  for (const name of external.plugins.keys()) if (!taken.has(name)) taken.set(name, SOURCES_PATH)
+  problems.push(...readThemes(root, taken).problems)
   return problems
 }
 
