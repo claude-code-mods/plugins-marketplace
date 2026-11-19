@@ -13,6 +13,9 @@
       "official": true,
       "title": "Theme Examples (all 20 scenes)",
       "preview": "previews/theme-examples/koi-mosaic.svg",
+      "onEnable": {
+        "command": "custom-theme"
+      },
       "looks": [
         {
           "id": "honu-lagoon",
@@ -264,6 +267,10 @@
       "version": "0.3.0",
       "description": "Clawd's room on a rainy day in halftone dots: rain at the window and a record spinning.",
       "author": "ishuagrawal",
+      "onEnable": {
+        "command": "rainy-window",
+        "args": "on"
+      },
       "looks": [
         {
           "id": "rainy-window",
@@ -303,6 +310,10 @@
       "author": "markimoo09",
       "title": "Cosmos",
       "preview": "https://raw.githubusercontent.com/markimoo09/claude-code-themes/d8e9dffc9e8aa9cd829951af105d8753c9f46685/preview-cosmos.png",
+      "onEnable": {
+        "command": "custom-theme",
+        "args": "next"
+      },
       "looks": [
         {
           "id": "cosmos",

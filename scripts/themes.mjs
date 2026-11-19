@@ -3,13 +3,14 @@
  * to a commit. A record with `listed: true` is published as a catalog listing
  * a client installs from that repository; its code never ships from here.
  *   { "version": 1, "plugins": [ { name, listed, repo, path, commit, version?,
- *       title?, description?, author?, official?, preview?,
+ *       title?, description?, author?, official?, preview?, onEnable?: { command, args? },
  *       looks: [ { id, name?, description?, appearance?, preview, use?: { command, args? } } ] } ] }
  *
  * Security: every record is third-party data. A look is accepted only with a
  * plain id, a preview that is a picture under `previews/` here or a
  * commit-pinned raw.githubusercontent.com picture, and a `use` of one command
- * word and one short lowercase argument.
+ * word and one short lowercase argument. `onEnable`, the plugin's own command
+ * a client runs after the plugin is turned on, is held to the same shape.
  */
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
@@ -113,6 +114,15 @@ export function readThemes(root, taken = new Map()) {
       const problem = previewProblem(root, record.preview)
       if (problem) problems.push(`${at}: ${problem}`)
     }
+    if (record.onEnable !== undefined) {
+      const run = record.onEnable
+      if (!run || typeof run !== 'object' || Array.isArray(run)) problems.push(`${at}: "onEnable" must be an object`)
+      else {
+        if (typeof run.command !== 'string' || !COMMAND_WORD.test(run.command)) problems.push(`${at}: "onEnable.command" must be a single command word`)
+        if (run.args !== undefined && (typeof run.args !== 'string' || !LOOK_ARGS.test(run.args))) problems.push(`${at}: "onEnable.args" must match [a-z0-9-]{0,64}`)
+        if (Object.keys(run).some(key => key !== 'command' && key !== 'args')) problems.push(`${at}: "onEnable" takes command and args alone`)
+      }
+    }
     if (!Array.isArray(looks) || looks.length === 0) return problems.push(`${at}: "looks" must be a non-empty array`)
     const ids = new Set()
     looks.forEach((look, lookIndex) => {
@@ -157,6 +167,10 @@ export function themeListing(record) {
     for (const key of LOOK_FIELDS) if (look[key] !== undefined) copy[key] = look[key]
     return copy
   })
+  if (record.onEnable !== undefined) {
+    theme.onEnable = { command: record.onEnable.command }
+    if (record.onEnable.args !== undefined) theme.onEnable.args = record.onEnable.args
+  }
   listing.theme = theme
   return listing
 }

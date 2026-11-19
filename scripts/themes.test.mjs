@@ -76,7 +76,7 @@ test('a listed theme is folded into the shipped catalog; an unlisted one is not'
         { id: 'night', preview: RAW, extra: 'dropped' },
       ],
     }),
-    record('nested', { listed: true, repo: 'someone/many', path: 'themes/nested', author: undefined }),
+    record('nested', { listed: true, repo: 'someone/many', path: 'themes/nested', author: undefined, onEnable: { command: 'nested', args: 'on' } }),
     record('hidden'),
   ])
   const onDisk = readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8')
@@ -107,7 +107,7 @@ test('a listed theme is folded into the shipped catalog; an unlisted one is not'
       version: '1.0.0',
       category: 'theme',
       source: { source: 'git-subdir', url: 'https://github.com/someone/many', path: 'themes/nested', sha: SHA_A },
-      theme: { looks: [{ id: 'nested', name: 'nested', preview: 'previews/nested/nested.svg' }] },
+      theme: { looks: [{ id: 'nested', name: 'nested', preview: 'previews/nested/nested.svg' }], onEnable: { command: 'nested', args: 'on' } },
     },
   ])
   assert.equal(catalog.name, 'velloc')
@@ -199,6 +199,18 @@ test('the check refuses a bad look id, preview or use', () => {
   assert.ok(
     problemsOf([record('one', { looks: [{ id: 'same', preview: RAW }, { id: 'same', preview: RAW }] })]).some(p => /look "same" is listed twice/.test(p)),
   )
+})
+
+test('the check refuses an onEnable that is not one command word and one short argument', () => {
+  const refused = (onEnable, pattern) =>
+    assert.ok(problemsOf([record('one', { onEnable })]).some(p => pattern.test(p)), JSON.stringify(onEnable))
+  refused('custom-theme', /"onEnable" must be an object/)
+  refused({ command: '/custom-theme' }, /"onEnable\.command"/)
+  refused({ command: 'two words' }, /"onEnable\.command"/)
+  refused({ command: 'pick', args: 'ON; rm' }, /"onEnable\.args"/)
+  refused({ command: 'pick', prompt: 'x' }, /takes command and args alone/)
+  assert.deepEqual(problemsOf([record('one', { onEnable: { command: 'custom-theme' } })]), [])
+  assert.deepEqual(problemsOf([record('one', { onEnable: { command: 'rainy-window', args: 'on' } })]), [])
 })
 
 test('the check refuses a local preview over the size limit', () => {

@@ -133,6 +133,7 @@ A script outside this repository maintains it; nothing here rewrites it.
       "name": "a-theme", "listed": false,
       "repo": "owner/name", "path": ".", "commit": "<full 40-character sha>",
       "version": "1.0.0", "description": "One line.", "author": "Who",
+      "onEnable": { "command": "a-theme", "args": "on" },
       "looks": [
         { "id": "night", "name": "Night", "appearance": "dark",
           "preview": "previews/a-theme/night.svg",
@@ -162,7 +163,14 @@ A script outside this repository maintains it; nothing here rewrites it.
 - The check validates every record, listed or not: names unique and not used
   by the catalog or `sources.json`, `repo` as `owner/name`, a full commit
   sha, a `path` inside the repository, look ids `[a-z0-9][a-z0-9-]*` unique
-  per plugin, `use.command` one word and `use.args` `[a-z0-9-]{0,64}`.
+  per plugin, `use.command` one word and `use.args` `[a-z0-9-]{0,64}`, and
+  `onEnable` of the same shape.
+- `onEnable`, optional, is the plugin's own command a client runs in the
+  session right after a person turns the plugin on. Write it for a plugin
+  that remembers its own "off" (in its store) and so stays dark when it is
+  loaded again; read the plugin's source and name the command and argument
+  that clear that "off". A client runs it only when the plugin registered the
+  command itself, and not when the plugin's own theme already shows.
 
 ## What the origin serves
 
