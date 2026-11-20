@@ -176,10 +176,13 @@ A script outside this repository maintains it; nothing here rewrites it.
 
 | Path | Content | Cache |
 | --- | --- | --- |
-| `/marketplace.tar.gz` | this repository's `.claude-plugin/` and `plugins/`, plus every fetched plugin as `plugins/<name>/`, as a gzip tar with one wrapper directory | `no-cache` |
-| `/index.json` | `{ name, buildId, generatedAt, sourceCommit, tarball, sha256, size, plugins, sources }` | `no-cache` |
-| `/previews/<name>/<file>` | the preview pictures of the listed themes | `no-cache` |
+| `/builtin/marketplace.tar.gz` | this repository's `.claude-plugin/` and `plugins/`, plus every fetched plugin as `plugins/<name>/`, as a gzip tar with one wrapper directory | `no-cache` |
+| `/builtin/index.json` | `{ name, buildId, generatedAt, sourceCommit, tarball, sha256, size, plugins, sources }` | `no-cache` |
+| `/builtin/previews/<name>/<file>` | the preview pictures of the listed themes | `no-cache` |
 
+While `SERVE_LEGACY_ROOT` in `scripts/stage_site.mjs` is `true`, the same
+three are also served at the root (`/index.json`, `/marketplace.tar.gz`,
+`/previews/...`) for clients that read them there; set it to `false` to stop.
 Any other path is a 404.
 
 A client downloads the tarball on its first start, then reads `index.json`
@@ -200,7 +203,7 @@ npm test                                # the scripts' own tests
 
 To try a build against a Velloc profile without publishing: serve `site/`
 with any static server, point the `velloc` entry of
-`~/.velloc/plugins/known_marketplaces.json` at `http://<host>/marketplace.tar.gz`,
+`~/.velloc/plugins/known_marketplaces.json` at `http://<host>/builtin/marketplace.tar.gz`,
 and start Velloc. A client that already ran once re-checks after a day;
 set `lastCheckedAt` in `~/.velloc/plugins/builtin_marketplace.json` back
 to force the check.

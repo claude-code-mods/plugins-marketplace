@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 /**
- * Builds `site/` (refuses a tree the check does not pass):
+ * Builds `site/` (refuses a tree the check does not pass). The client reads
+ * everything below from `site/builtin/`; while SERVE_LEGACY_ROOT is set the
+ * same files are also served from the site root for older clients.
  *   marketplace.tar.gz   `.claude-plugin/`, `plugins/` and each fetched plugin as `plugins/<name>/`,
  *                        a gzip POSIX tar under one wrapper directory; sorted, mtime 0, reproducible
  *                        the catalog in it also lists every `listed` record of themes.json,
  *                        installed from its own repository (no `plugins/<name>/` here)
  *   index.json           { name, buildId, generatedAt, sourceCommit, tarball, sha256, size, plugins, sources }
  *   previews/            the local preview pictures the listed themes' looks name
- *   _headers             the two files and `previews/` `no-cache`; everything else `no-store`
+ *   _headers             (site root) the two files and `previews/` `no-cache`; everything else `no-store`
  */
 import { createHash } from 'node:crypto'
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
@@ -20,6 +22,10 @@ import { PREVIEWS_DIR, listedPreviewFiles, readThemes, themeListing } from './th
 
 export const TARBALL_NAME = 'marketplace.tar.gz'
 export const INDEX_NAME = 'index.json'
+/** The directory under the origin the client reads (`/builtin/index.json`). */
+export const BUILTIN_DIR = 'builtin'
+/** Also serve the files at the origin root, for clients that read them there. */
+export const SERVE_LEGACY_ROOT = true
 const SHIPPED_DIRS = ['.claude-plugin', 'plugins']
 
 /**
@@ -89,28 +95,38 @@ export function buildTarball(files, wrapper) {
   return gzipSync(Buffer.concat(blocks), { level: 9 })
 }
 
-export const HEADERS = `# The two files a client reads: the edge revalidates every request, so a
-# new build is seen within one round trip and an old one is never pinned.
-/${INDEX_NAME}
+function servedHeaders(prefix) {
+  return `/${prefix}${INDEX_NAME}
   ! Cache-Control
   Cache-Control: no-cache
   Access-Control-Allow-Origin: *
-/${TARBALL_NAME}
+/${prefix}${TARBALL_NAME}
   ! Cache-Control
   Cache-Control: no-cache
   Access-Control-Allow-Origin: *
-# Theme preview pictures, named without a content hash, so revalidated too.
-# They come from other repositories: never sniffed, never run as a document.
-/${PREVIEWS_DIR}/*
+/${prefix}${PREVIEWS_DIR}/*
   ! Cache-Control
   Cache-Control: no-cache
   Access-Control-Allow-Origin: *
   X-Content-Type-Options: nosniff
   Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
-/*
+`
+}
+
+/**
+ * The two files a client reads and the theme preview pictures are revalidated
+ * on every request; previews come from other repositories, so they are never
+ * sniffed or run as a document. Everything else is `no-store`.
+ */
+export function buildHeaders(legacyRoot) {
+  const prefixes = [`${BUILTIN_DIR}/`, ...(legacyRoot ? [''] : [])]
+  return `${prefixes.map(servedHeaders).join('')}/*
   ! Cache-Control
   Cache-Control: no-store
 `
+}
+
+export const HEADERS = buildHeaders(SERVE_LEGACY_ROOT)
 
 const COMMIT_SHA = /^[0-9a-f]{7,40}$/i
 
@@ -125,7 +141,10 @@ export function sourceCommit(root) {
   }
 }
 
-/** Stage `root` into `outDir`; returns the index written. */
+/**
+ * Stage `root` into `outDir`; returns the index written. `options.legacyRoot`
+ * (default SERVE_LEGACY_ROOT) also writes the served files at the root.
+ */
 export function stageSite(root, outDir, options = {}) {
   const problems = checkMarketplace(root)
   if (problems.length > 0) throw new Error(`stage: the check fails:\n${problems.map(p => `  ${p}`).join('\n')}`)
@@ -154,15 +173,19 @@ export function stageSite(root, outDir, options = {}) {
     plugins: catalog.plugins.map(p => p.name),
     sources: readSources(root).sources.map(s => ({ repo: s.repo, commit: s.commit, plugins: s.plugins.map(p => p.name) })),
   }
+  const legacyRoot = options.legacyRoot ?? SERVE_LEGACY_ROOT
   rmSync(outDir, { recursive: true, force: true })
   mkdirSync(outDir, { recursive: true })
-  writeFileSync(join(outDir, TARBALL_NAME), tarball)
-  writeFileSync(join(outDir, INDEX_NAME), `${JSON.stringify(index, null, 2)}\n`)
-  writeFileSync(join(outDir, '_headers'), HEADERS)
-  for (const preview of listedPreviewFiles(listed)) {
-    const target = join(outDir, ...preview.split('/'))
-    mkdirSync(dirname(target), { recursive: true })
-    copyFileSync(join(root, ...preview.split('/')), target)
+  writeFileSync(join(outDir, '_headers'), buildHeaders(legacyRoot))
+  for (const dir of [join(outDir, BUILTIN_DIR), ...(legacyRoot ? [outDir] : [])]) {
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(join(dir, TARBALL_NAME), tarball)
+    writeFileSync(join(dir, INDEX_NAME), `${JSON.stringify(index, null, 2)}\n`)
+    for (const preview of listedPreviewFiles(listed)) {
+      const target = join(dir, ...preview.split('/'))
+      mkdirSync(dirname(target), { recursive: true })
+      copyFileSync(join(root, ...preview.split('/')), target)
+    }
   }
   return index
 }

@@ -10,7 +10,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { checkMarketplace } from './check_marketplace.mjs'
-import { HEADERS, INDEX_NAME, TARBALL_NAME, stageSite } from './stage_site.mjs'
+import { BUILTIN_DIR, HEADERS, INDEX_NAME, TARBALL_NAME, stageSite } from './stage_site.mjs'
 import { readTarEntries } from './tar_read.mjs'
 import { PREVIEW_MAX_BYTES } from './themes.mjs'
 
@@ -56,7 +56,7 @@ function scratchThemes(records) {
 
 /** The staged tarball's regular files, wrapper removed: `{ paths, catalog }`. */
 function stagedTarball(out) {
-  const entries = readTarEntries(readFileSync(join(out, TARBALL_NAME))).filter(e => e.type === 'file')
+  const entries = readTarEntries(readFileSync(join(out, BUILTIN_DIR, TARBALL_NAME))).filter(e => e.type === 'file')
   assert.ok(entries.every(e => e.path.startsWith(WRAPPER)))
   const files = new Map(entries.map(e => [e.path.slice(WRAPPER.length), e.content]))
   return { paths: [...files.keys()], catalog: JSON.parse(files.get('.claude-plugin/marketplace.json').toString('utf8')) }
@@ -117,18 +117,18 @@ test('a listed theme is folded into the shipped catalog; an unlisted one is not'
 
   // The catalog in the repository is untouched; the index still describes the tarball.
   assert.equal(readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8'), onDisk)
-  const tarball = readFileSync(join(out, TARBALL_NAME))
+  const tarball = readFileSync(join(out, BUILTIN_DIR, TARBALL_NAME))
   assert.equal(index.sha256, createHash('sha256').update(tarball).digest('hex'))
   assert.equal(index.size, tarball.length)
-  assert.deepEqual(JSON.parse(readFileSync(join(out, INDEX_NAME), 'utf8')), index)
+  assert.deepEqual(JSON.parse(readFileSync(join(out, BUILTIN_DIR, INDEX_NAME), 'utf8')), index)
   assert.deepEqual(index.plugins, ['alpha'])
 
   // Exactly the listed looks' local previews are copied, byte for byte.
   for (const preview of ['previews/rooted/day.svg', 'previews/nested/nested.svg']) {
-    assert.deepEqual(readFileSync(join(out, preview)), readFileSync(join(root, preview)))
+    assert.deepEqual(readFileSync(join(out, BUILTIN_DIR, preview)), readFileSync(join(root, preview)))
   }
-  assert.equal(existsSync(join(out, 'previews', 'hidden')), false)
-  assert.equal(existsSync(join(out, 'previews', 'rooted', 'cover.svg')), false)
+  assert.equal(existsSync(join(out, BUILTIN_DIR, 'previews', 'hidden')), false)
+  assert.equal(existsSync(join(out, BUILTIN_DIR, 'previews', 'rooted', 'cover.svg')), false)
   assert.match(HEADERS, /\/previews\/\*\n {2}! Cache-Control\n {2}Cache-Control: no-cache\n/)
   assert.match(HEADERS, /\/\*\n {2}! Cache-Control\n {2}Cache-Control: no-store\n$/)
 })
@@ -140,7 +140,7 @@ test('with nothing listed the tarball is the one a tree without themes.json stag
   writeFileSync(join(without, 'themes.json'), '{ "version": 1, "plugins": [] }')
   const b = stageSite(without, join(without, 'site'), STAGE)
   assert.equal(a.sha256, b.sha256)
-  assert.equal(existsSync(join(withThemes, 'site', 'previews')), false)
+  assert.equal(existsSync(join(withThemes, 'site', BUILTIN_DIR, 'previews')), false)
   assert.deepEqual(stagedTarball(join(withThemes, 'site')).catalog.plugins.map(p => p.name), ['alpha'])
 })
 

@@ -12,7 +12,7 @@ import { gunzipSync, gzipSync } from 'node:zlib'
 import { bumpSource } from './bump_source.mjs'
 import { checkMarketplace } from './check_marketplace.mjs'
 import { codeloadUrl, fetchSources } from './fetch_sources.mjs'
-import { TARBALL_NAME, stageSite } from './stage_site.mjs'
+import { BUILTIN_DIR, TARBALL_NAME, stageSite } from './stage_site.mjs'
 import { readTarEntries } from './tar_read.mjs'
 
 const SHA_A = 'a'.repeat(40)
@@ -210,7 +210,7 @@ test('a fetched plugin ships as plugins/<name>/ and the index names its pin', as
     { repo: 'example/one-plugin', commit: SHA_B, plugins: ['rooted'] },
     { repo: 'example/more-plugins', commit: SHA_A, plugins: ['nested'] },
   ])
-  const paths = readTarEntries(readFileSync(join(out, TARBALL_NAME))).map(e => e.path.slice('plugins-marketplace-abcdef0/'.length))
+  const paths = readTarEntries(readFileSync(join(out, BUILTIN_DIR, TARBALL_NAME))).map(e => e.path.slice('plugins-marketplace-abcdef0/'.length))
   assert.deepEqual(paths, [
     '.claude-plugin/marketplace.json',
     'plugins/alpha/.claude-plugin/plugin.json',
@@ -221,7 +221,7 @@ test('a fetched plugin ships as plugins/<name>/ and the index names its pin', as
     'plugins/rooted/docs/package.json',
     'plugins/rooted/skills/hi/SKILL.md',
   ])
-  assert.ok(!gunzipSync(readFileSync(join(out, TARBALL_NAME))).includes(Buffer.from('fetched.json')))
+  assert.ok(!gunzipSync(readFileSync(join(out, BUILTIN_DIR, TARBALL_NAME))).includes(Buffer.from('fetched.json')))
 })
 
 test('the bump moves one listed pin and refuses the rest', () => {

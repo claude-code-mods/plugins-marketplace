@@ -4,13 +4,13 @@
  */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { gunzipSync } from 'node:zlib'
 import { checkMarketplace } from './check_marketplace.mjs'
-import { INDEX_NAME, TARBALL_NAME, sourceCommit, stageSite } from './stage_site.mjs'
+import { BUILTIN_DIR, INDEX_NAME, TARBALL_NAME, buildHeaders, sourceCommit, stageSite } from './stage_site.mjs'
 
 function scratchMarketplace(plugins) {
   const root = mkdtempSync(join(tmpdir(), 'plugins-marketplace-'))
@@ -56,11 +56,11 @@ test('stages the catalog and the plugins under one wrapper directory, with the d
   ])
   const out = join(root, 'site')
   const index = stageSite(root, out, { sourceCommit: 'abcdef0123456789', runId: '42', generatedAt: '2026-10-13T00:00:00.000Z' })
-  const tarball = readFileSync(join(out, TARBALL_NAME))
+  const tarball = readFileSync(join(out, BUILTIN_DIR, TARBALL_NAME))
   assert.equal(index.buildId, 'abcdef0-42')
   assert.equal(index.sha256, createHash('sha256').update(tarball).digest('hex'))
   assert.equal(index.size, tarball.length)
-  assert.deepEqual(JSON.parse(readFileSync(join(out, INDEX_NAME), 'utf8')), index)
+  assert.deepEqual(JSON.parse(readFileSync(join(out, BUILTIN_DIR, INDEX_NAME), 'utf8')), index)
   const paths = tarPaths(tarball)
   assert.ok(paths.every(p => p.startsWith('plugins-marketplace-abcdef0/')), paths.join('\n'))
   const stripped = paths.map(p => p.slice('plugins-marketplace-abcdef0/'.length))
@@ -122,4 +122,23 @@ test('a listing whose folder is missing or misnamed is a problem', () => {
   assert.ok(problems.some(p => /listed twice/.test(p)))
   assert.ok(problems.some(p => /plugins\/gone\/ does not exist/.test(p)))
   assert.ok(problems.some(p => /outside.*"source"/.test(p)))
+})
+
+test('serves the files under builtin/, and at the root only while the legacy copy is on', () => {
+  const root = scratchMarketplace([{ name: 'alpha', version: '1.0.0', flags: {} }])
+  const stage = { sourceCommit: 'abcdef0', runId: '1', generatedAt: 'x' }
+  const both = join(root, 'both')
+  stageSite(root, both, { ...stage, legacyRoot: true })
+  for (const name of [TARBALL_NAME, INDEX_NAME]) {
+    assert.deepEqual(readFileSync(join(both, name)), readFileSync(join(both, BUILTIN_DIR, name)))
+  }
+  assert.equal(readFileSync(join(both, '_headers'), 'utf8'), buildHeaders(true))
+  assert.match(buildHeaders(true), /^\/builtin\/index\.json\n[\s\S]*\n\/index\.json\n/)
+
+  const only = join(root, 'only')
+  stageSite(root, only, { ...stage, legacyRoot: false })
+  assert.equal(existsSync(join(only, BUILTIN_DIR, TARBALL_NAME)), true)
+  assert.equal(existsSync(join(only, TARBALL_NAME)), false)
+  assert.equal(existsSync(join(only, INDEX_NAME)), false)
+  assert.doesNotMatch(buildHeaders(false), /^\/index\.json$/m)
 })
