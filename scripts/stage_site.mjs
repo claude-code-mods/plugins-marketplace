@@ -25,7 +25,7 @@ export const INDEX_NAME = 'index.json'
 /** The directory under the origin the client reads (`/builtin/index.json`). */
 export const BUILTIN_DIR = 'builtin'
 /** Also serve the files at the origin root, for clients that read them there. */
-export const SERVE_LEGACY_ROOT = true
+export const SERVE_LEGACY_ROOT = false
 const SHIPPED_DIRS = ['.claude-plugin', 'plugins']
 
 /**

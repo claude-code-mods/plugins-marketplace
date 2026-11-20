@@ -180,9 +180,9 @@ A script outside this repository maintains it; nothing here rewrites it.
 | `/builtin/index.json` | `{ name, buildId, generatedAt, sourceCommit, tarball, sha256, size, plugins, sources }` | `no-cache` |
 | `/builtin/previews/<name>/<file>` | the preview pictures of the listed themes | `no-cache` |
 
-While `SERVE_LEGACY_ROOT` in `scripts/stage_site.mjs` is `true`, the same
-three are also served at the root (`/index.json`, `/marketplace.tar.gz`,
-`/previews/...`) for clients that read them there; set it to `false` to stop.
+Setting `SERVE_LEGACY_ROOT` in `scripts/stage_site.mjs` to `true` also serves
+the three at the root (`/index.json`, `/marketplace.tar.gz`, `/previews/...`);
+it is `false`, so the root serves nothing.
 Any other path is a 404.
 
 A client downloads the tarball on its first start, then reads `index.json`
