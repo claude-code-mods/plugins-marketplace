@@ -12,6 +12,13 @@
       "source": "./plugins/nebius",
       "category": "providers",
       "onByDefault": true
+    },
+    {
+      "name": "paypal-desk",
+      "description": "A resident desk for PayPal merchants: a background module watches invoices, disputes and payments through PayPal's MCP server, a live dashboard shows them, and the agent works each case with your confirmation.",
+      "source": "./plugins/paypal-desk",
+      "category": "mods",
+      "betaOnly": true
     }
   ]
 }
