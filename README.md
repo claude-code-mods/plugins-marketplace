@@ -182,7 +182,9 @@ A script outside this repository maintains it; nothing here rewrites it.
 
 Setting `SERVE_LEGACY_ROOT` in `scripts/stage_site.mjs` to `true` also serves
 the three at the root (`/index.json`, `/marketplace.tar.gz`, `/previews/...`);
-it is `false`, so the root serves nothing.
+it is `false`. Instead the root serves `frozen-root/index.json` and
+`frozen-root/marketplace.tar.gz` unchanged: a fixed build for clients that
+read the root. Delete `frozen-root/` to stop serving it.
 Any other path is a 404.
 
 A client downloads the tarball on its first start, then reads `index.json`

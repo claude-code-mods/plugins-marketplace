@@ -10,7 +10,7 @@ import { join } from 'node:path'
 import { test } from 'node:test'
 import { gunzipSync } from 'node:zlib'
 import { checkMarketplace } from './check_marketplace.mjs'
-import { BUILTIN_DIR, INDEX_NAME, TARBALL_NAME, buildHeaders, sourceCommit, stageSite } from './stage_site.mjs'
+import { BUILTIN_DIR, FROZEN_ROOT_DIR, INDEX_NAME, TARBALL_NAME, buildHeaders, sourceCommit, stageSite } from './stage_site.mjs'
 
 function scratchMarketplace(plugins) {
   const root = mkdtempSync(join(tmpdir(), 'plugins-marketplace-'))
@@ -141,4 +141,17 @@ test('serves the files under builtin/, and at the root only while the legacy cop
   assert.equal(existsSync(join(only, TARBALL_NAME)), false)
   assert.equal(existsSync(join(only, INDEX_NAME)), false)
   assert.doesNotMatch(buildHeaders(false), /^\/index\.json$/m)
+})
+
+test('serves the frozen root build byte for byte at the root, beside builtin/', () => {
+  const root = scratchMarketplace([{ name: 'alpha', version: '1.0.0', flags: {} }])
+  mkdirSync(join(root, FROZEN_ROOT_DIR))
+  writeFileSync(join(root, FROZEN_ROOT_DIR, INDEX_NAME), '{"buildId":"old"}\n')
+  writeFileSync(join(root, FROZEN_ROOT_DIR, TARBALL_NAME), Buffer.from([1, 2, 3]))
+  const out = join(root, 'site')
+  const index = stageSite(root, out, { sourceCommit: 'abcdef0', runId: '1', generatedAt: 'x', legacyRoot: false })
+  assert.equal(readFileSync(join(out, INDEX_NAME), 'utf8'), '{"buildId":"old"}\n')
+  assert.deepEqual(readFileSync(join(out, TARBALL_NAME)), Buffer.from([1, 2, 3]))
+  assert.deepEqual(JSON.parse(readFileSync(join(out, BUILTIN_DIR, INDEX_NAME), 'utf8')), index)
+  assert.equal(readFileSync(join(out, '_headers'), 'utf8'), buildHeaders(true))
 })

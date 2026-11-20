@@ -26,6 +26,12 @@ export const INDEX_NAME = 'index.json'
 export const BUILTIN_DIR = 'builtin'
 /** Also serve the files at the origin root, for clients that read them there. */
 export const SERVE_LEGACY_ROOT = false
+/**
+ * A fixed build served at the origin root, byte for byte, for clients that read
+ * the root: `index.json` and `marketplace.tar.gz` from this directory, when it
+ * exists. Ignored while SERVE_LEGACY_ROOT is on.
+ */
+export const FROZEN_ROOT_DIR = 'frozen-root'
 const SHIPPED_DIRS = ['.claude-plugin', 'plugins']
 
 /**
@@ -174,9 +180,14 @@ export function stageSite(root, outDir, options = {}) {
     sources: readSources(root).sources.map(s => ({ repo: s.repo, commit: s.commit, plugins: s.plugins.map(p => p.name) })),
   }
   const legacyRoot = options.legacyRoot ?? SERVE_LEGACY_ROOT
+  const frozen = join(root, FROZEN_ROOT_DIR)
+  const frozenRoot = !legacyRoot && existsSync(join(frozen, INDEX_NAME)) && existsSync(join(frozen, TARBALL_NAME))
   rmSync(outDir, { recursive: true, force: true })
   mkdirSync(outDir, { recursive: true })
-  writeFileSync(join(outDir, '_headers'), buildHeaders(legacyRoot))
+  writeFileSync(join(outDir, '_headers'), buildHeaders(legacyRoot || frozenRoot))
+  if (frozenRoot) {
+    for (const name of [INDEX_NAME, TARBALL_NAME]) copyFileSync(join(frozen, name), join(outDir, name))
+  }
   for (const dir of [join(outDir, BUILTIN_DIR), ...(legacyRoot ? [outDir] : [])]) {
     mkdirSync(dir, { recursive: true })
     writeFileSync(join(dir, TARBALL_NAME), tarball)
