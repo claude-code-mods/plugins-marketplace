@@ -1,11 +1,11 @@
 {
   "name": "velloc",
-  "buildId": "0a6f251-paypal",
-  "generatedAt": "2026-11-20T18:51:29.223Z",
-  "sourceCommit": "0a6f2514270d238ba686630c1dbe690cad32be39",
+  "buildId": "778456f-paypal",
+  "generatedAt": "2026-11-20T20:49:29.338Z",
+  "sourceCommit": "778456fddc35acce547e95a7c6a31e189b4b8a3e",
   "tarball": "marketplace.tar.gz",
-  "sha256": "e01f741c523e7349c3d8fe178da09608705365306f8f4e145d9b923bb567a576",
-  "size": 169588,
+  "sha256": "07251c998cff03829e8b4e09a116011992e049703444789fdd48b59761a5838c",
+  "size": 164984,
   "plugins": [
     "nebius",
     "paypal-desk"
@@ -13,7 +13,7 @@
   "sources": [
     {
       "repo": "VellocLabs/Nebius-Mod",
-      "commit": "35fedd39947d4a56ddbbb85e8524a96bbaa504e9",
+      "commit": "114212a29880d598bd37a59c14005eb4aa2ab4ad",
       "plugins": [
         "nebius"
       ]
