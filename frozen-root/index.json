@@ -1,18 +1,18 @@
 {
   "name": "velloc",
-  "buildId": "e736389-20261030",
-  "generatedAt": "2026-10-30T22:44:39.000Z",
-  "sourceCommit": "e736389e1a5a15e178a976bf9d3e48ed3cc22b5a",
+  "buildId": "5be3395-facd0819",
+  "generatedAt": "2026-10-30T15:58:14.487Z",
+  "sourceCommit": "5be339553b82ff4ed7213aa173927f2044a58b3a",
   "tarball": "marketplace.tar.gz",
-  "sha256": "5390b5a5d64b52a1ba4e552042ad454a12ae00c5dc5997af0e8aa58ec2da161d",
-  "size": 7064368,
+  "sha256": "2ca8700cdd905935a4c0ddbe7a1a85fa8381cfbd3d6d73316f9fdafeab9c9bd3",
+  "size": 91398,
   "plugins": [
     "nebius"
   ],
   "sources": [
     {
       "repo": "VellocLabs/Nebius-Mod",
-      "commit": "634166cdb541530e7bed781c303d4fb188c0e858",
+      "commit": "35fedd39947d4a56ddbbb85e8524a96bbaa504e9",
       "plugins": [
         "nebius"
       ]
