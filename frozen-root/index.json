@@ -1,13 +1,14 @@
 {
   "name": "velloc",
-  "buildId": "5be3395-facd0819",
-  "generatedAt": "2026-10-30T15:58:14.487Z",
-  "sourceCommit": "5be339553b82ff4ed7213aa173927f2044a58b3a",
+  "buildId": "0a6f251-paypal",
+  "generatedAt": "2026-11-20T18:51:29.223Z",
+  "sourceCommit": "0a6f2514270d238ba686630c1dbe690cad32be39",
   "tarball": "marketplace.tar.gz",
-  "sha256": "2ca8700cdd905935a4c0ddbe7a1a85fa8381cfbd3d6d73316f9fdafeab9c9bd3",
-  "size": 91398,
+  "sha256": "e01f741c523e7349c3d8fe178da09608705365306f8f4e145d9b923bb567a576",
+  "size": 169588,
   "plugins": [
-    "nebius"
+    "nebius",
+    "paypal-desk"
   ],
   "sources": [
     {
@@ -15,6 +16,13 @@
       "commit": "35fedd39947d4a56ddbbb85e8524a96bbaa504e9",
       "plugins": [
         "nebius"
+      ]
+    },
+    {
+      "repo": "VellocLabs/Paypal-Desk-Mod",
+      "commit": "58712616fca2a76527df84e5c8ae8be0781cc951",
+      "plugins": [
+        "paypal-desk"
       ]
     }
   ]
