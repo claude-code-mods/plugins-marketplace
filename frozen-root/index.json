@@ -1,36 +1,20 @@
 {
   "name": "velloc",
-  "buildId": "bf2bbb9-3456c04a",
-  "generatedAt": "2026-11-19T03:30:21.587Z",
-  "sourceCommit": "bf2bbb98407c216cf4740dcfc38dc2b04cbf0fd4",
+  "buildId": "e736389-20261030",
+  "generatedAt": "2026-10-30T22:44:39.000Z",
+  "sourceCommit": "e736389e1a5a15e178a976bf9d3e48ed3cc22b5a",
   "tarball": "marketplace.tar.gz",
-  "sha256": "6c10a17b393282b3c027afe32b2e940081ae83d9ee106240524ff60c58f8229c",
-  "size": 7173032,
+  "sha256": "5390b5a5d64b52a1ba4e552042ad454a12ae00c5dc5997af0e8aa58ec2da161d",
+  "size": 7064368,
   "plugins": [
-    "nebius",
-    "paypal-desk",
-    "opencode-go"
+    "nebius"
   ],
   "sources": [
     {
       "repo": "VellocLabs/Nebius-Mod",
-      "commit": "00b3624bf37eff7ad527c945afcd0717b463c524",
+      "commit": "634166cdb541530e7bed781c303d4fb188c0e858",
       "plugins": [
         "nebius"
-      ]
-    },
-    {
-      "repo": "VellocLabs/Paypal-Desk-Mod",
-      "commit": "58712616fca2a76527df84e5c8ae8be0781cc951",
-      "plugins": [
-        "paypal-desk"
-      ]
-    },
-    {
-      "repo": "claude-code-mods/OpenCode-Go-Mod",
-      "commit": "26dd9ef00bae42a630fd8076c41c6f786dad6783",
-      "plugins": [
-        "opencode-go"
       ]
     }
   ]
