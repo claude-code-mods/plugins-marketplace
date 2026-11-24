@@ -26,6 +26,14 @@
       "source": "./plugins/opencode-go",
       "category": "providers",
       "onByDefault": true
+    },
+    {
+      "name": "insights",
+      "description": "Insights: tokens spent, lines written and files touched, across every model and provider, for all projects and for each one.",
+      "source": "./plugins/insights",
+      "category": "mods",
+      "onByDefault": true,
+      "betaOnly": true
     }
   ]
 }

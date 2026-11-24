@@ -29,6 +29,16 @@
           "path": "."
         }
       ]
+    },
+    {
+      "repo": "VellocLabs/Insights-Mod",
+      "commit": "9abd936d662eb09d2011a071452b08b22770e159",
+      "plugins": [
+        {
+          "name": "insights",
+          "path": "."
+        }
+      ]
     }
   ]
 }
