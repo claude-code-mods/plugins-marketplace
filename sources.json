@@ -32,7 +32,7 @@
     },
     {
       "repo": "VellocLabs/Insights-Mod",
-      "commit": "9abd936d662eb09d2011a071452b08b22770e159",
+      "commit": "e93f731b0af3e112a93dd7647e1c09c981cf4b5c",
       "plugins": [
         {
           "name": "insights",
